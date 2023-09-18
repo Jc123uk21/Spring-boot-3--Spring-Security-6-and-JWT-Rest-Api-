@@ -2,6 +2,7 @@ package com.jcatchploe.FoodStore.Controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,5 +31,12 @@ public class AuthController {
 	public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request){
 		System.out.println("controller accessed");
 		return ResponseEntity.ok(userService.authenticateUser(request));
+	}
+	
+	//add new admin user
+	@PostMapping("/admin/add")
+	@Secured("ROLE_ADMIN")
+	public ResponseEntity<AuthResponse> addNewAdmin(@RequestBody AuthRequest request){
+		return ResponseEntity.ok(userService.addNewAdminUser(request));
 	}
 }

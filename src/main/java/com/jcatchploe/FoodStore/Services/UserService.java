@@ -19,4 +19,6 @@ public interface UserService {
 	public void deleteUserByUsername(String username);
 	public List<User> getAllUsers();
 	public AuthResponse authenticateUser(AuthRequest request);
+	public AuthResponse addNewAdminUser(AuthRequest request);
+	public User updateUserDetailsById(User user);
 }

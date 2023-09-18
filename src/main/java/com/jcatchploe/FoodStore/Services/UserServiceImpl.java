@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User getUserById(long id) {
 		// get user details from the database
-		return this.userRepository.getReferenceById(id);
+		return this.userRepository.findById(id).get();
 	}
 
 	@Override
@@ -51,6 +51,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void deleteUserById(long id) {
 		// delete a user by their id value
+		
 		this.userRepository.deleteById(id);
 	}
 
@@ -73,7 +74,7 @@ public class UserServiceImpl implements UserService {
 		User user = new User();
 		user.setUsername(request.getUsername());
 		user.setPassword(this.passwordEncoder.encode(request.getPassword()));
-		user.setRole(Role.USER);
+		user.setRole(Role.ROLE_USER);
 		
 		userRepository.save(user);
 		
@@ -95,4 +96,34 @@ public class UserServiceImpl implements UserService {
 		return response;
 	}
 
+	//Add new admin user
+	public AuthResponse addNewAdminUser(AuthRequest request) {
+		User adminUser = new User();
+		adminUser.setUsername(request.getUsername());
+		adminUser.setPassword(this.passwordEncoder.encode(request.getPassword()));
+		adminUser.setRole(Role.ROLE_ADMIN);
+		
+		userRepository.save(adminUser);
+		
+		response.setToken(jwtService.generateToken((@NotNull UserDetails) adminUser));
+		
+		return response;
+	}
+	
+	//Update user details
+	public User updateUserDetailsById(User user){
+		User userDetails = this.getUserById(user.getId());
+		if(userDetails != null) {
+			userDetails.setPassword(passwordEncoder.encode(user.getPassword()));
+			userDetails.setUsername(user.getUsername());
+			//Delete users current details
+			this.userRepository.deleteById(user.getId());
+			//store users new details
+			this.userRepository.save(userDetails);
+			return userDetails;	
+		}
+		return user;
+	}
+	
+	
 }

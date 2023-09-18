@@ -1,7 +1,7 @@
 package com.jcatchploe.FoodStore.Models;
 
 public enum Role {
-	USER,
-	ADMIN
+	ROLE_USER,
+	ROLE_ADMIN
 
 }
